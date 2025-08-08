@@ -5,9 +5,11 @@ import (
 	"database/sql"
 	"fmt"
 	"log"
+	"math/rand"
 	"os"
 	"patterngarden/patterns/options"
 	"patterngarden/patterns/repository"
+	"time"
 
 	// Import the Postgres driver
 	_ "github.com/jackc/pgx/v5/stdlib"
@@ -42,7 +44,11 @@ func runRepository() {
 	// userService := repository.NewUserService(memRepo)
 
 	fmt.Println("Registering user 'John Doe'...")
-	user, err := userService.RegisterUser(ctx, "user@example.com", "John Doe")
+	rand.Seed(time.Now().UnixNano())
+	randNumber := rand.Intn(100000)
+	email := fmt.Sprintf("user_%d@example.com", randNumber)
+	name := fmt.Sprintf(" User %d", randNumber)
+	user, err := userService.RegisterUser(ctx, email, name)
 	if err != nil {
 		fmt.Printf("Error registering user: %v", err)
 		return
