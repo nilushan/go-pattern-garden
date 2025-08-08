@@ -11,7 +11,7 @@ RUN go mod download
 COPY . .
 
 # Build the application, disabling CGO for a static binary
-RUN CGO_ENABLED=0 GOOS=linux go build -o /main ./main.go
+RUN CGO_ENABLED=0 GOOS=linux go build -o /main ./cmd/patterngarden
 
 # Stage 2: Create the final, minimal image
 FROM alpine:latest
