@@ -39,11 +39,11 @@ func NewPostgresUserRepository(db *sql.DB) *PostgresUserRepository {
 }
 
 func (r *PostgresUserRepository) Create(ctx context.Context, user *User) error {
-	_, err := r.db.ExecContext(ctx, "INSERT INTO users (email, name, created_at) VALUES ($1, $2, $3)", user.Email, user.Name, user.CreatedAt)
+	_, err := r.db.ExecContext(ctx, "INSERT INTO users (id, email, name, created_at) VALUES ($1, $2, $3, $4)", user.ID, user.Email, user.Name, user.CreatedAt)
 	return err
 }
 
-func (r *PostgresUserRepository) GetById(ctx context.Context, id int) (*User, error) {
+func (r *PostgresUserRepository) GetById(ctx context.Context, id string) (*User, error) {
 	row := r.db.QueryRowContext(ctx, "SELECT id, email, name, created_at FROM users WHERE id = $1", id)
 	var user User
 	err := row.Scan(&user.ID, &user.Email, &user.Name, &user.CreatedAt)

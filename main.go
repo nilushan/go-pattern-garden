@@ -2,9 +2,15 @@ package main
 
 import (
 	"context"
+	"database/sql"
 	"fmt"
+	"log"
+	"os"
 	"patterngarden/patterns/options"
 	"patterngarden/patterns/repository"
+
+	// Import the Postgres driver
+	_ "github.com/jackc/pgx/v5/stdlib"
 )
 
 func runOptions() {
@@ -14,9 +20,26 @@ func runOptions() {
 func runRepository() {
 
 	ctx := context.Background()
-	fmt.Println("--- Running with In-Memory Repository ---")
-	memRepo := repository.NewInMemoryUserRepository()
-	userService := repository.NewUserService(memRepo)
+
+	dbConnectionString := os.Getenv("DB_CONNECTION_STRING")
+	if dbConnectionString == "" {
+		log.Fatal("DB_CONNECTION_STRING environment variable is not set")
+	}
+
+	db, err := sql.Open("pgx", dbConnectionString)
+	if err != nil {
+		fmt.Printf("Error opening database: %v", err)
+		return
+	}
+	defer db.Close()
+
+	fmt.Println("--- Running with Postgres Repository ---")
+	pgRepo := repository.NewPostgresUserRepository(db)
+	userService := repository.NewUserService(pgRepo)
+
+	// fmt.Println("--- Running with In-Memory Repository ---")
+	// memRepo := repository.NewInMemoryUserRepository()
+	// userService := repository.NewUserService(memRepo)
 
 	fmt.Println("Registering user 'John Doe'...")
 	user, err := userService.RegisterUser(ctx, "user@example.com", "John Doe")

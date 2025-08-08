@@ -1,0 +1,33 @@
+version: "3.8"
+
+services:
+  # The PostgreSQL Database Service
+  db:
+    image: postgres:16-alpine
+    container_name: my-postgres-db
+    environment:
+      POSTGRES_USER: myuser
+      POSTGRES_PASSWORD: mypassword
+      POSTGRES_DB: mydb
+    ports:
+      - "5432:5432"
+    volumes:
+      # Mount the init script to set up the DB on first run
+      - ./db/init:/docker-entrypoint-initdb.d
+      # Persist database data across container restarts
+      - ./db/data:/var/lib/postgresql/data
+    restart: unless-stopped
+
+  # The Go Application Service
+  app:
+    build: . # Build the image from the Dockerfile in the current directory
+    container_name: my-go-app
+    ports:
+      - "8080:8080"
+    environment:
+      # The connection string for the app to connect to the DB
+      # Note: We use the service name 'db' as the host, not 'localhost'
+      DB_CONNECTION_STRING: "postgres://myuser:mypassword@db:5432/mydb?sslmode=disable"
+    depends_on:
+      - db # This ensures the 'db' service starts before the 'app' service
+    restart: unless-stopped
