@@ -8,5 +8,6 @@ import (
 func main() {
 	// options.Run()
 	// repository.Run()
-	demoFactory()
+	// demoFactory()
+	demoPipeline()
 }

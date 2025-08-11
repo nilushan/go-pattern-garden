@@ -47,7 +47,13 @@ The `UserService` is initialized with a `UserRepository` implementation. You can
 
 ### 3. Factory Pattern
 
-(Work in Progress) The Factory pattern provides an interface for creating objects in a superclass but lets subclasses alter the type of objects that will be created. The placeholder for this pattern can be found in `patterngarden/patterns/factory/`.
+The Factory pattern provides an interface for creating objects in a superclass but lets subclasses alter the type of objects that will be created. The placeholder for this pattern can be found in `patterngarden/patterns/factory/`.
+
+
+### 4. Pipeline Pattern
+
+The Pipeline pattern is a design pattern that allows you to chain together a series of processing steps, each of which can modify or transform the input data. The placeholder for this pattern can be found in `patterngarden/patterns/pipeline/`.
+
 
 ## Getting Started
 
